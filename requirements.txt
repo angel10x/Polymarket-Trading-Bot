@@ -1,0 +1,4 @@
+requests
+ratelimit
+python-dotenv
+pmxt>=2.0.4
