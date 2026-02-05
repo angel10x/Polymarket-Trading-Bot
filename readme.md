@@ -1,6 +1,6 @@
 # Polymarket Copy Trader
 
-A simple bot to track and copy positions on Polymarket.
+A simple bot to track and copy positions on Polymarket. Built with [pmxt](https://github.com/pmxt-dev/pmxt)
 
 ## Setup
 
