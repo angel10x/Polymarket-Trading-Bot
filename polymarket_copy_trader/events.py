@@ -2,22 +2,21 @@
 
 import logging
 import queue
-from typing import Any, Callable
+from typing import Any
 
 # Optional queue for UI: items are ("task", who, payload) or ("log", record).
 # UI sets this before starting the runner; runner/trader push to it when present.
-_ui_queue: queue.Queue[tuple[str, Any, ...]] | None = None
+_STATE: dict[str, queue.Queue[tuple[str, Any, ...]] | None] = {"queue": None}
 
 
 def set_ui_queue(q: queue.Queue[tuple[str, Any, ...]] | None) -> None:
     """Set the global queue for UI events. Call with None to clear."""
-    global _ui_queue
-    _ui_queue = q
+    _STATE["queue"] = q
 
 
 def get_ui_queue() -> queue.Queue[tuple[str, Any, ...]] | None:
     """Return the current UI queue, if any."""
-    return _ui_queue
+    return _STATE["queue"]
 
 
 def emit_task(who: str, change: dict[str, Any], result: Any = None) -> None:

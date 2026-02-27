@@ -75,7 +75,8 @@ def save_config(config: dict[str, Any], config_path: str | Path | None = None) -
     Save application config to a JSON file.
 
     Args:
-        config: Config dict with keys wallets_to_track, copy_percentage, rate_limit, trading_enabled.
+        config: Config dict (wallets_to_track, copy_percentage, rate_limit,
+            trading_enabled, poll_interval).
         config_path: Path to config file. Defaults to CONFIG_FILENAME in cwd.
     """
     path = Path(config_path or CONFIG_FILENAME)
