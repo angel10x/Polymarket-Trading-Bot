@@ -2,3 +2,7 @@ requests
 ratelimit
 python-dotenv
 pmxt>=2.0.4
+jinja2
+textual>=0.40.0
+rich>=13.0.0
+plotext>=5.0.0
