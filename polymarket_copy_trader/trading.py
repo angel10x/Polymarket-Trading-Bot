@@ -1,3 +1,4 @@
+# pylint: disable=broad-exception-caught,too-many-return-statements
 """Copy-trade execution via Polymarket (pmxt)."""
 
 import logging
@@ -12,7 +13,7 @@ from polymarket_copy_trader.constants import DEFAULT_ORDER_FEE_BPS, SIGNATURE_TY
 logger = logging.getLogger(__name__)
 
 
-class CopyTrader:
+class CopyTrader:  # pylint: disable=too-few-public-methods
     """
     Executes copy trades on Polymarket based on detected position changes.
     Thread-safe for parallel execution; caches market_id by slug to reduce latency.
@@ -105,11 +106,12 @@ class CopyTrader:
                         amount=our_size,
                         fee=DEFAULT_ORDER_FEE_BPS,
                     )
-                except Exception as e:
+                except Exception as e:  # pylint: disable=broad-exception-caught
                     msg = str(e).lower()
                     if "not enough balance" in msg or "insufficient" in msg:
                         logger.error(
-                            "Order failed: not enough balance. Reduce size or fund your account. (%s)",
+                            "Order failed: not enough balance. "
+                            "Reduce size or fund your account. (%s)",
                             e,
                         )
                     elif "trading restricted" in msg or "available regions" in msg:
@@ -123,6 +125,6 @@ class CopyTrader:
             logger.info("Order placed successfully. Order ID: %s", order.id)
             return order
 
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-exception-caught,too-many-return-statements
             logger.exception("Failed to execute copy trade: %s", e)
             return None

@@ -1,3 +1,4 @@
+# pylint: disable=too-many-locals,too-many-branches,too-many-statements,too-many-nested-blocks
 """Main copy-trader loop: poll positions and execute copy trades."""
 
 import logging
@@ -142,7 +143,7 @@ def run_until_stopped(
 
                     wallet_positions[wallet] = current_positions
 
-                except Exception as e:
+                except Exception as e:  # pylint: disable=broad-exception-caught
                     logger.exception("Error tracking wallet %s: %s", wallet[:8], e)
 
             # Wait for poll_interval or until stop_event is set (so Ctrl+C stops quickly)

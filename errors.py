@@ -1,3 +1,4 @@
+# pylint: disable=too-many-arguments,too-many-positional-arguments
 """
 Base error class for all PMT errors.
 
@@ -65,21 +66,27 @@ class OrderNotFound(BaseError):
     """404 Not Found - The requested order doesn't exist."""
 
     def __init__(self, order_id: str, exchange: str | None = None) -> None:
-        super().__init__(f"Order not found: {order_id}", 404, "ORDER_NOT_FOUND", False, exchange)
+        super().__init__(
+            f"Order not found: {order_id}", 404, "ORDER_NOT_FOUND", False, exchange
+        )
 
 
 class MarketNotFound(BaseError):
     """404 Not Found - The requested market doesn't exist."""
 
     def __init__(self, market_id: str, exchange: str | None = None) -> None:
-        super().__init__(f"Market not found: {market_id}", 404, "MARKET_NOT_FOUND", False, exchange)
+        super().__init__(
+            f"Market not found: {market_id}", 404, "MARKET_NOT_FOUND", False, exchange
+        )
 
 
 class EventNotFound(BaseError):
     """404 Not Found - The requested event doesn't exist."""
 
     def __init__(self, identifier: str, exchange: str | None = None) -> None:
-        super().__init__(f"Event not found: {identifier}", 404, "EVENT_NOT_FOUND", False, exchange)
+        super().__init__(
+            f"Event not found: {identifier}", 404, "EVENT_NOT_FOUND", False, exchange
+        )
 
 
 class RateLimitExceeded(BaseError):

@@ -13,6 +13,7 @@ from typing import Any, Literal, NotRequired, TypedDict
 
 
 class MarketOutcome(TypedDict, total=False):
+    """Single outcome within a prediction market (price, label, metadata)."""
     outcome_id: str
     market_id: str
     label: str
@@ -22,6 +23,7 @@ class MarketOutcome(TypedDict, total=False):
 
 
 class UnifiedMarket(TypedDict, total=False):
+    """Normalized market representation shared across exchanges."""
     market_id: str
     title: str
     description: str
@@ -44,6 +46,7 @@ class UnifiedMarket(TypedDict, total=False):
 
 
 class UnifiedEvent(TypedDict, total=False):
+    """Normalized event / tournament containing one or more markets."""
     id: str
     title: str
     description: str
@@ -59,6 +62,7 @@ CandleInterval = Literal["1m", "5m", "15m", "1h", "6h", "1d"]
 
 
 class PriceCandle(TypedDict, total=False):
+    """OHLCV candle for price history over a fixed interval."""
     timestamp: int | float
     open: float
     high: float
@@ -68,17 +72,20 @@ class PriceCandle(TypedDict, total=False):
 
 
 class OrderLevel(TypedDict):
+    """Single level in an order book (price / size)."""
     price: float
     size: float
 
 
 class OrderBook(TypedDict):
+    """Aggregated bid/ask levels for a market at a point in time."""
     bids: list[OrderLevel]
     asks: list[OrderLevel]
     timestamp: NotRequired[int | float]
 
 
 class Trade(TypedDict, total=False):
+    """Executed trade on an exchange (not necessarily user-specific)."""
     id: str
     timestamp: int | float
     price: float
@@ -87,6 +94,7 @@ class Trade(TypedDict, total=False):
 
 
 class UserTrade(Trade, total=False):
+    """User-specific trade data, extending a generic trade with order info."""
     order_id: str
 
 
@@ -96,6 +104,7 @@ class UserTrade(Trade, total=False):
 
 
 class Order(TypedDict, total=False):
+    """Standardized order object used for creating and tracking orders."""
     id: str
     market_id: str
     outcome_id: str
@@ -111,6 +120,7 @@ class Order(TypedDict, total=False):
 
 
 class Position(TypedDict, total=False):
+    """Open or closed position in a particular market outcome."""
     market_id: str
     outcome_id: str
     outcome_label: str
@@ -122,6 +132,7 @@ class Position(TypedDict, total=False):
 
 
 class Balance(TypedDict):
+    """Wallet or account balance for a single currency or token."""
     currency: str
     total: float
     available: float
@@ -129,6 +140,7 @@ class Balance(TypedDict):
 
 
 class CreateOrderParams(TypedDict, total=False):
+    """Parameters required to create an order on any supported exchange."""
     market_id: str
     outcome_id: str
     side: Literal["buy", "sell"]
