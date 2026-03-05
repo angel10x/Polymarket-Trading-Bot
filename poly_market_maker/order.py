@@ -3,7 +3,7 @@ from py_clob_client.order_builder.constants import BUY, SELL
 
 from poly_market_maker.market import Token
 
-
+# Side is an enum that defines the different sides of an order.
 class Side(Enum):
     BUY = BUY
     SELL = SELL

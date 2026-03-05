@@ -1,6 +1,6 @@
 from web3 import Web3
 
-
+# CTHelpers is a class that provides helper functions for the Conditional Token contracts.
 class CTHelpers:
     P = 21888242871839275222246405745257275088696311157297823662689037894645226208583
 

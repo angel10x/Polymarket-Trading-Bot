@@ -9,7 +9,7 @@ from poly_market_maker.metrics import gas_station_latency
 
 DEFAULT_FIXED_GAS_PRICE = 100000000000
 
-
+# GasStrategy is an enum that defines the different gas strategies.
 class GasStrategy(enum.Enum):
     FIXED = "fixed"
     STATION = "station"

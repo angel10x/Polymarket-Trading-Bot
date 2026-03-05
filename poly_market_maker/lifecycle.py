@@ -3,7 +3,7 @@ import signal
 import threading
 import time
 
-
+# AsyncCallback is a class that invokes a callback in a separate thread.
 class AsyncCallback:
     """
     Invokes callback logic in a separate thread

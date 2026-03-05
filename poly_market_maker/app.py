@@ -28,7 +28,6 @@ class App:
         args = get_args(args)
         self.sync_interval = args.sync_interval
 
-        # self.min_tick = args.min_tick
         # self.min_size = args.min_size
 
         # server to expose the metrics.

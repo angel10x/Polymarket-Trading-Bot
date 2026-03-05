@@ -3,7 +3,7 @@ import logging
 from poly_market_maker.ct_helpers import CTHelpers
 from poly_market_maker.token import Token
 
-
+# Market is a class that represents the market for a given condition id and collateral address.
 class Market:
     def __init__(self, condition_id: str, collateral_address: str):
         self.logger = logging.getLogger(self.__class__.__name__)

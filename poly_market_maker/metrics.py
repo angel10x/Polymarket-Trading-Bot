@@ -1,5 +1,6 @@
 from prometheus_client import Counter, Gauge, Histogram
 
+# chain_requests_counter is a counter that counts the number of chain requests.
 chain_requests_counter = Counter(
     "chain_requests_counter",
     "Counts the chain executions",

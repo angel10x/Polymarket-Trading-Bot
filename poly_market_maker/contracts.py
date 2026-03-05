@@ -17,7 +17,7 @@ erc1155_is_approved_for_all = """[{"inputs": [{"internalType": "address","name":
 
 DECIMALS = 10**6
 
-
+# Contracts is a class that wraps the web3 contract and provides a higher level interface for interacting with the contracts.
 class Contracts:
     def __init__(self, w3: web3.Web3, gas_station: GasStation):
         self.w3 = w3
