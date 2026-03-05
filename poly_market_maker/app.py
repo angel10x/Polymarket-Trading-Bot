@@ -1,20 +1,21 @@
 import logging
-from prometheus_client import start_http_server
 import time
 
+from prometheus_client import start_http_server
+
 from poly_market_maker.args import get_args
-from poly_market_maker.price_feed import PriceFeedClob
-from poly_market_maker.gas import GasStation, GasStrategy
-from poly_market_maker.utils import setup_logging, setup_web3
-from poly_market_maker.order import Order, Side
-from poly_market_maker.market import Market
-from poly_market_maker.token import Token, Collateral
 from poly_market_maker.clob_api import ClobApi
-from poly_market_maker.lifecycle import Lifecycle
-from poly_market_maker.orderbook import OrderBookManager
 from poly_market_maker.contracts import Contracts
+from poly_market_maker.gas import GasStation, GasStrategy
+from poly_market_maker.lifecycle import Lifecycle
+from poly_market_maker.market import Market
 from poly_market_maker.metrics import keeper_balance_amount
+from poly_market_maker.order import Order, Side
+from poly_market_maker.orderbook import OrderBookManager
+from poly_market_maker.price_feed import PriceFeedClob
 from poly_market_maker.strategy import StrategyManager
+from poly_market_maker.token import Token, Collateral
+from poly_market_maker.utils import setup_logging, setup_web3
 
 
 class App:
@@ -79,20 +80,17 @@ class App:
             self.order_book_manager,
         )
 
-    """
-    main
-    """
+        # Cache addresses used in get_balances (called at refresh_frequency)
+        self._collateral_address: str | None = None
+        self._conditional_address: str | None = None
 
     def main(self):
+        """Run the keeper: startup, periodic sync, shutdown on exit."""
         self.logger.debug(self.sync_interval)
         with Lifecycle() as lifecycle:
             lifecycle.on_startup(self.startup)
-            lifecycle.every(self.sync_interval, self.synchronize)  # Sync every 5s
+            lifecycle.every(self.sync_interval, self.synchronize)
             lifecycle.on_shutdown(self.shutdown)
-
-    """
-    lifecycle
-    """
 
     def startup(self):
         self.logger.info("Running startup callback...")
@@ -109,52 +107,50 @@ class App:
         self.logger.debug("Synchronized orderbook!")
 
     def shutdown(self):
-        """
-        Shut down the keeper
-        """
+        """Shut down the keeper and cancel all orders."""
         self.logger.info("Keeper shutting down...")
         self.order_book_manager.cancel_all_orders()
         self.logger.info("Keeper is shut down!")
 
-    """
-    handlers
-    """
+    def _balance_addresses(self) -> tuple[str, str]:
+        """Cached collateral and conditional token addresses for balance/metrics."""
+        if self._collateral_address is None:
+            self._collateral_address = self.clob_api.get_collateral_address()
+            self._conditional_address = self.clob_api.get_conditional_address()
+        return self._collateral_address, self._conditional_address
 
     def get_balances(self) -> dict:
-        """
-        Fetch the onchain balances of collateral and conditional tokens for the keeper
-        """
-        self.logger.debug(f"Getting balances for address: {self.address}")
+        """Fetch onchain balances of collateral and conditional tokens for the keeper."""
+        self.logger.debug("Getting balances for address: %s", self.address)
+        collateral_addr, conditional_addr = self._balance_addresses()
+        token_id_a = self.market.token_id(Token.A)
+        token_id_b = self.market.token_id(Token.B)
 
         collateral_balance = self.contracts.token_balance_of(
-            self.clob_api.get_collateral_address(), self.address
+            collateral_addr, self.address
         )
         token_A_balance = self.contracts.token_balance_of(
-            self.clob_api.get_conditional_address(),
-            self.address,
-            self.market.token_id(Token.A),
+            conditional_addr, self.address, token_id_a
         )
         token_B_balance = self.contracts.token_balance_of(
-            self.clob_api.get_conditional_address(),
-            self.address,
-            self.market.token_id(Token.B),
+            conditional_addr, self.address, token_id_b
         )
         gas_balance = self.contracts.gas_balance(self.address)
 
         keeper_balance_amount.labels(
             accountaddress=self.address,
-            assetaddress=self.clob_api.get_collateral_address(),
+            assetaddress=collateral_addr,
             tokenid="-1",
         ).set(collateral_balance)
         keeper_balance_amount.labels(
             accountaddress=self.address,
-            assetaddress=self.clob_api.get_conditional_address(),
-            tokenid=self.market.token_id(Token.A),
+            assetaddress=conditional_addr,
+            tokenid=token_id_a,
         ).set(token_A_balance)
         keeper_balance_amount.labels(
             accountaddress=self.address,
-            assetaddress=self.clob_api.get_conditional_address(),
-            tokenid=self.market.token_id(Token.B),
+            assetaddress=conditional_addr,
+            tokenid=token_id_b,
         ).set(token_B_balance)
         keeper_balance_amount.labels(
             accountaddress=self.address,
@@ -169,19 +165,22 @@ class App:
         }
 
     def get_orders(self) -> list[Order]:
-        orders = self.clob_api.get_orders(self.market.condition_id)
+        """Fetch active orders from the CLOB for this market."""
+        condition_id = self.market.condition_id
+        orders = self.clob_api.get_orders(condition_id)
         return [
             Order(
-                size=order_dict["size"],
-                price=order_dict["price"],
-                side=Side(order_dict["side"]),
-                token=self.market.token(order_dict["token_id"]),
-                id=order_dict["id"],
+                size=o["size"],
+                price=o["price"],
+                side=Side(o["side"]),
+                token=self.market.token(o["token_id"]),
+                id=o["id"],
             )
-            for order_dict in orders
+            for o in orders
         ]
 
     def place_order(self, new_order: Order) -> Order:
+        """Place a single order on the CLOB; returns the same order with id set."""
         order_id = self.clob_api.place_order(
             price=new_order.price,
             size=new_order.size,
@@ -197,9 +196,7 @@ class App:
         )
 
     def approve(self):
-        """
-        Approve the keeper on the collateral and conditional tokens
-        """
+        """Approve the keeper on the collateral and conditional tokens."""
         collateral = self.clob_api.get_collateral_address()
         conditional = self.clob_api.get_conditional_address()
         exchange = self.clob_api.get_exchange()

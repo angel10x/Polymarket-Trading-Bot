@@ -86,6 +86,7 @@ class Lifecycle:
         self.terminated_externally = False
         self.fatal_termination = False
         self._at_least_one_every = False
+        self._shutdown_event = threading.Event()
 
     def __enter__(self):
         return self
@@ -228,6 +229,7 @@ class Lifecycle:
                 "Keeper received SIGINT/SIGTERM signal, will terminate gracefully"
             )
             self.terminated_externally = True
+            self._shutdown_event.set()
 
     def _start_thread_safely(self, t: threading.Thread):
         delay = 10
@@ -278,7 +280,7 @@ class Lifecycle:
                     self.logger.debug(
                         f"Ignoring timer #{idx} as keeper is already terminating"
                     )
-            except:
+            except Exception:
                 setup_timer(frequency_in_seconds)
                 raise
             setup_timer(frequency_in_seconds)
@@ -287,23 +289,22 @@ class Lifecycle:
         self._at_least_one_every = True
 
     def _main_loop(self):
-        # terminate gracefully on either SIGINT or SIGTERM
+        """Run until shutdown; use Event so we wake promptly on SIGINT/SIGTERM."""
         signal.signal(signal.SIGINT, self._sigint_sigterm_handler)
         signal.signal(signal.SIGTERM, self._sigint_sigterm_handler)
 
         while self._at_least_one_every:
-            time.sleep(1)
+            # Wait up to 1s so we check termination flags; wake immediately if event set
+            self._shutdown_event.wait(timeout=1)
 
-            # if the keeper logic asked us to terminate, we do so
             if self.terminated_internally:
                 self.logger.warning(
                     "Keeper logic asked for termination, the keeper will terminate"
                 )
                 break
 
-            # if SIGINT/SIGTERM asked us to terminate, we do so
             if self.terminated_externally:
                 self.logger.warning(
-                    "The keeper is terminating due do SIGINT/SIGTERM signal received"
+                    "The keeper is terminating due to SIGINT/SIGTERM signal received"
                 )
                 break
