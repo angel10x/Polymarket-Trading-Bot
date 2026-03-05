@@ -131,6 +131,6 @@ To trade safely and maintain controlled exposure on Polymarket, follow these gui
 Need help setting up your Polymarket bot or want to optimize your trading strategy?  
 Connect directly with our expert team and start trading smarter!  
 
-🚀 **Fastest Support:** [Telegram: @qntrade](https://t.me/qntrade)  
+🚀 **Fastest Support:** Telegram: [@qntrade](https://t.me/qntrade)  
 
 Wishing you smooth fills and profitable spreads — happy trading! 📈
