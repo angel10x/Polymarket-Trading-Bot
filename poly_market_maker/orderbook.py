@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor, wait
 
 from poly_market_maker.order import Order, Side
 
-
+# OrderBook is a class that represents the current snapshot of the order book.
 class OrderBook:
     """Represents the current snapshot of the order book.
 

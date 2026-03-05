@@ -6,6 +6,7 @@ from poly_market_maker.market import Market
 from poly_market_maker.token import Token
 
 
+# PriceFeedSource is an enum that defines the different sources of the price feed.
 class PriceFeedSource(Enum):
     CLOB = "clob"
 

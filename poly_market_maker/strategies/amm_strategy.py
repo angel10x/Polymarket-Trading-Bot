@@ -5,7 +5,8 @@ from poly_market_maker.order import Order
 from poly_market_maker.strategies.amm import AMMManager, AMMConfig
 from poly_market_maker.strategies.base_strategy import BaseStrategy
 
-
+    
+# OrderType is a class that represents the type of an order.
 class OrderType:
     def __init__(self, order: Order):
         self.price = order.price
