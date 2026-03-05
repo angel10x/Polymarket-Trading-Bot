@@ -14,7 +14,7 @@ from web3.middleware import (
 )
 from web3.gas_strategies.time_based import fast_gas_price_strategy
 
-
+# setup_logging is a function that sets up the logging for the market maker.
 def setup_logging(
     log_path="logging.yaml",
     log_level=logging.INFO,
