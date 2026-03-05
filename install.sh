@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# install.sh is a script that installs the dependencies and activates the virtual environment.
 echo "Installing dependencies and activating virtualenv..."
 
 set -e

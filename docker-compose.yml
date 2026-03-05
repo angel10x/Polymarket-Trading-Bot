@@ -1,4 +1,4 @@
-services:
+services: # docker-compose.yml is a configuration file for the docker container.
   app:
     extends:
       file: docker-compose.build.yml

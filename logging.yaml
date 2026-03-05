@@ -1,3 +1,4 @@
+# logging.yaml is a configuration file for the logging.
 ---
 version: 1
 disable_existing_loggers: False

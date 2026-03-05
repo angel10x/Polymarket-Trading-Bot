@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+# install-dev.sh is a script that installs the development dependencies and activates the virtual environment.
 set -e
 
 ./install.sh

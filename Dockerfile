@@ -1,3 +1,4 @@
+# Dockerfile is a configuration file for the docker container.
 FROM python:3.10.10-slim-buster
 
 WORKDIR /app
