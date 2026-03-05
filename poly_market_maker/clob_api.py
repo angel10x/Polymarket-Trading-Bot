@@ -12,6 +12,13 @@ DEFAULT_PRICE = 0.5
 
 
 class ClobApi:
+    # ClobApi is a class that wraps the ClobClient and provides a higher level interface for interacting with the CLOB API.
+    # It is used to get the collateral and conditional token addresses, and to place and cancel orders.
+    # It is also used to get the current price from the CLOB API.
+    # It is also used to get the open keeper orders from the CLOB API.
+    # It is also used to place and cancel orders from the CLOB API.
+    # It is also used to cancel all orders from the CLOB API.
+    # It is also used to get the current price from the CLOB API.
     def __init__(self, host, chain_id, private_key):
         self.logger = logging.getLogger(self.__class__.__name__)
 

@@ -2,7 +2,15 @@ import argparse
 
 from poly_market_maker.strategy import Strategy
 
-
+# get_args is a function that parses the command line arguments and returns a dictionary of the arguments.
+# The arguments are:
+# --private-key: The private key of the account to use for the market maker.
+# --rpc-url: The RPC URL to use for the market maker.
+# --clob-api-url: The CLOB API URL to use for the market maker.
+# --sync-interval: The interval in seconds between synchronizations.
+# --min-size: The minimum size of an order.
+# --min-tick: The minimum tick size.
+# --refresh-frequency: The frequency in seconds to refresh the order book.
 def get_args(args) -> dict:
     parser = argparse.ArgumentParser(prog="poly-market-maker")
 
