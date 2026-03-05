@@ -1,0 +1,28 @@
+{
+  "bands": [
+    {
+      "minMargin": 0.01,
+      "avgMargin": 0.02,
+      "maxMargin": 0.03,
+      "minAmount": 100.0,
+      "avgAmount": 100.0,
+      "maxAmount": 100.0
+    },
+    {
+      "minMargin": 0.03,
+      "avgMargin": 0.04,
+      "maxMargin": 0.05,
+      "minAmount": 100.0,
+      "avgAmount": 100.0,
+      "maxAmount": 100.0
+    },
+    {
+      "minMargin": 0.05,
+      "avgMargin": 0.06,
+      "maxMargin": 0.07,
+      "minAmount": 100.0,
+      "avgAmount": 100.0,
+      "maxAmount": 100.0
+    }
+  ]
+}

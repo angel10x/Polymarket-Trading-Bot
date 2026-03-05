@@ -1,0 +1,15 @@
+services:
+  app:
+    extends:
+      file: docker-compose.build.yml
+      service: app
+    environment:
+      - CONDITION_ID=${CONDITION_ID:?err}
+      - STRATEGY=${STRATEGY:?err}
+      - CONFIG=${CONFIG:?err}
+    env_file:
+      - .env
+    volumes:
+      - ./config:/app/config
+      - ./logs:/app/logs
+    command: ./run

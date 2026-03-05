@@ -1,0 +1,5 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    image: polymarket/poly-market-maker
