@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test WebSocket subscription to Polymarket CLOB market channel.
+Websocket Test
 """
 
 import json
