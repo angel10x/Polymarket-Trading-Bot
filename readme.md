@@ -1,136 +1,342 @@
-# poly-market-maker
+# Polymarket Trading Bot
 
-A production-ready Polymarket CLOB market-making engine designed for systematic liquidity provision.
-Implements inventory-aware quoting, spread optimization, intelligent order management, and automated risk controls to maintain balanced exposure while maximizing spread capture on prediction markets.
+English | [简体中文](README_CN.md)
 
-Want to learn more or get setup help? Please connect with our techy team on Telegram: [@qntrade](https://t.me/qntrade) 🚀
+A beginner-friendly Python trading bot for Polymarket with gasless transactions and real-time WebSocket data.
 
-## ⚙️ What This Bot Does
+## Features
 
-The **Polymarket Market Maker Bot** is a production-grade trading engine designed to provide automated liquidity on the Polymarket CLOB while maintaining controlled inventory and maximizing spread capture.
+- **Simple API**: Just a few lines of code to start trading
+- **Gasless Transactions**: No gas fees with Builder Program credentials
+- **Real-time WebSocket**: Live orderbook updates via WebSocket
+- **15-Minute Markets**: Built-in support for BTC/ETH/SOL/XRP 15-minute Up/Down markets
+- **Flash Crash Strategy**: Pre-built strategy for volatility trading
+- **Terminal UI**: Real-time orderbook display with in-place updates
+- **Secure Key Storage**: Private keys encrypted with PBKDF2 + Fernet
+- **Fully Tested**: 89 unit tests covering all functionality
 
-It enables:
+## Quick Start (5 Minutes)
 
-- **Real-time market making** on the Polymarket Central Limit Order Book
-- **Balanced YES/NO inventory management** to maintain controlled exposure
-- **Intelligent quote placement** near the top of the orderbook
-- **Optimized cancel/replace cycles** tuned for Polymarket's 500ms taker delay
-- **Passive maker-only execution** to capture spreads and earn rebates
-- **Automated risk controls** to prevent excessive exposure
-- **Auto-redeem for settled markets**
-- **Gas-efficient operations** through batching and lifecycle optimization
-- **Low-latency orderbook updates** via WebSocket feeds
+### Step 1: Install
 
----
+```bash
+git clone https://github.com/your-username/polymarket-trading-bot.git
+cd polymarket-trading-bot
+pip install -r requirements.txt
+```
 
-# 🚀 Core Features
+### Step 2: Configure
 
-## Inventory Balance & Exposure Control
+```bash
+# Set your credentials
+export POLY_PRIVATE_KEY=your_metamask_private_key
+export POLY_SAFE_ADDRESS=0xYourPolymarketSafeAddress
+```
 
-Maintain controlled market exposure with automated inventory management.
+> **Where to find your Safe address?** Go to [polymarket.com/settings](https://polymarket.com/settings) and copy your wallet address.
 
-- **Mirrored YES/NO positioning** to balance exposure across both sides
-- **Net exposure limits** with configurable USD thresholds
-- **Inventory skew detection** with automatic quote size adjustments
-- **Dynamic rebalancing** to prevent runaway inventory accumulation
-- **Target inventory levels** for consistent risk management
+### Step 3: Run
 
----
+```bash
+# Run the quickstart example
+python examples/quickstart.py
 
-## Spread Farming Efficiency
+# Or run the Flash Crash Strategy
+python strategies/flash_crash_strategy.py --coin BTC
+```
 
-Maximize profitability through intelligent spread capture.
+That's it! You're ready to trade.
 
-- **Top-of-book quoting** for higher fill probability
-- **Maker-only execution** to earn rebates and avoid taker fees
-- **Optimized queue positioning** for improved execution priority
-- **Fast quote updates** to reduce missed fills
-- **Anti-crossing protection** to prevent accidental taker trades
+## Trading Strategies
 
----
+### Flash Crash Strategy
 
-## Cancel / Replace Optimization
+Monitors 15-minute Up/Down markets for sudden probability drops and executes trades automatically.
 
-Efficient order lifecycle management designed for Polymarket's execution mechanics.
+```bash
+# Run with default settings (0.30 drop threshold)
+python strategies/flash_crash_strategy.py --coin BTC
 
-- **Low-latency refresh cycles** (default: 1000ms)
-- **500ms taker delay optimization**
-- **Batch order cancellations** to reduce API calls and gas usage
-- **Stale order detection** with automatic cancellation
-- **Smooth quote transitions** without gaps or overlaps
+# Custom settings
+python strategies/flash_crash_strategy.py --coin ETH --drop 0.25 --size 10
 
----
+# Available options
+--coin      BTC, ETH, SOL, XRP (default: ETH)
+--drop      Drop threshold as absolute change (default: 0.30)
+--size      Trade size in USDC (default: 5.0)
+--lookback  Detection window in seconds (default: 10)
+--take-profit  TP in dollars (default: 0.10)
+--stop-loss    SL in dollars (default: 0.05)
+```
 
-## Market Discovery & Real-Time Data
+**Strategy Logic:**
+1. Auto-discover current 15-minute market
+2. Monitor orderbook prices via WebSocket in real-time
+3. When probability drops by 0.30+ in 10 seconds, buy the crashed side
+4. Exit at +$0.10 (take profit) or -$0.05 (stop loss)
 
-Stay synchronized with the market through low-latency data streams.
+## Strategy Development Guide
 
-- **Automatic market discovery** within configurable time windows
-- **WebSocket orderbook feeds** for real-time L2 updates
-- **Trade monitoring** for instant inventory adjustments
-- **Efficient market metadata caching**
+- See `docs/strategy_guide.md` for a step-by-step tutorial and templates.
 
----
+### Real-time Orderbook TUI
 
-## Risk Management
+View live orderbook data in a beautiful terminal interface:
 
-Built-in safeguards to protect trading capital.
+```bash
+python strategies/orderbook_tui.py --coin BTC --levels 5
+```
 
-- **Hard exposure limits** on net USD exposure
-- **Maximum position size controls**
-- **Inventory skew protection**
-- **Optional stop-loss thresholds**
-- **Pre-trade validation checks**
+## Code Examples
 
----
+### Simplest Example
 
-## Auto-Redeem & Gas Optimization
+```python
+from src import create_bot_from_env
+import asyncio
 
-Efficient on-chain interaction and settlement management.
+async def main():
+    # Create bot from environment variables
+    bot = create_bot_from_env()
 
-- **Automatic redemption** for settled markets
-- **Gas batching** to reduce transaction costs
-- **Configurable gas pricing**
-- **Optimized order lifecycle operations**
+    # Get your open orders
+    orders = await bot.get_open_orders()
+    print(f"You have {len(orders)} open orders")
 
----
+asyncio.run(main())
+```
 
-## Performance Monitoring
+### Place an Order
 
-Advanced monitoring for professional trading operations.
+```python
+from src import TradingBot, Config
+import asyncio
 
-- **Prometheus metrics** for orders, inventory, exposure, and PnL
-- **Structured JSON logs** for full operational auditability
-- **Passive fill-rate tracking**
-- **Latency monitoring** for quote generation and execution
+async def trade():
+    # Create configuration
+    config = Config(safe_address="0xYourSafeAddress")
 
-## ⚠️ Risk Management Best Practices
+    # Initialize bot with your private key
+    bot = TradingBot(config=config, private_key="0xYourPrivateKey")
 
-To trade safely and maintain controlled exposure on Polymarket, follow these guidelines:
+    # Place a buy order
+    result = await bot.place_order(
+        token_id="12345...",   # Market token ID
+        price=0.65,            # Price (0.65 = 65% probability)
+        size=10.0,             # Number of shares
+        side="BUY"             # or "SELL"
+    )
 
-1. **Start Small**  
-   Begin with low `DEFAULT_SIZE` and `MAX_EXPOSURE_USD` values to limit initial risk.
+    if result.success:
+        print(f"Order placed! ID: {result.order_id}")
+    else:
+        print(f"Order failed: {result.message}")
 
-2. **Monitor Inventory**  
-   Keep an eye on inventory skew and adjust limits dynamically to maintain balanced YES/NO positions.
+asyncio.run(trade())
+```
 
-3. **Set Conservative Exposure Limits**  
-   Use strict exposure caps to prevent runaway positions or over-leveraging.
+### Real-time WebSocket Data
 
-4. **Test Thoroughly on Testnet**  
-   Validate strategies and bot behavior on test networks before deploying with real funds.
+```python
+from src.websocket_client import MarketWebSocket, OrderbookSnapshot
+import asyncio
 
-5. **Monitor Gas Costs**  
-   While gas batching helps reduce on-chain fees, always track gas usage during periods of high network activity.
+async def main():
+    ws = MarketWebSocket()
 
-6. **Regularly Review Logs**  
-   Audit logs for risk check alerts, unexpected behaviors, and edge cases to ensure system integrity.
+    @ws.on_book
+    async def on_book_update(snapshot: OrderbookSnapshot):
+        print(f"Mid price: {snapshot.mid_price:.4f}")
+        print(f"Best bid: {snapshot.best_bid:.4f}")
+        print(f"Best ask: {snapshot.best_ask:.4f}")
 
-## 📞 Get Support
+    await ws.subscribe(["token_id_1", "token_id_2"])
+    await ws.run()
 
-Need help setting up your Polymarket bot or want to optimize your trading strategy?  
-Connect directly with our expert team and start trading smarter!  
+asyncio.run(main())
+```
 
-🚀 **Fastest Support:** Telegram: [@qntrade](https://t.me/qntrade)  
+### Get 15-Minute Market Info
 
-Wishing you smooth fills and profitable spreads — happy trading! 📈
+```python
+from src.gamma_client import GammaClient
+
+gamma = GammaClient()
+
+# Get current BTC 15-minute market
+market = gamma.get_market_info("BTC")
+print(f"Market: {market['question']}")
+print(f"Up token: {market['token_ids']['up']}")
+print(f"Down token: {market['token_ids']['down']}")
+print(f"Ends: {market['end_date']}")
+```
+
+### Cancel Orders
+
+```python
+# Cancel a specific order
+await bot.cancel_order("order_id_here")
+
+# Cancel all orders
+await bot.cancel_all_orders()
+
+# Cancel orders for a specific market
+await bot.cancel_market_orders(market="condition_id", asset_id="token_id")
+```
+
+## Project Structure
+
+```
+polymarket-trading-bot/
+├── src/                      # Core library
+│   ├── bot.py               # TradingBot - main interface
+│   ├── config.py            # Configuration handling
+│   ├── client.py            # API clients (CLOB, Relayer)
+│   ├── signer.py            # Order signing (EIP-712)
+│   ├── crypto.py            # Key encryption
+│   ├── utils.py             # Helper functions
+│   ├── gamma_client.py      # 15-minute market discovery
+│   └── websocket_client.py  # Real-time WebSocket client
+│
+├── strategies/               # Trading strategies
+│   ├── flash_crash_strategy.py  # Volatility trading strategy
+│   └── orderbook_tui.py     # Real-time orderbook display
+│
+├── examples/                 # Example code
+│   ├── quickstart.py        # Start here!
+│   ├── basic_trading.py     # Common operations
+│   └── strategy_example.py  # Custom strategies
+│
+├── scripts/                  # Utility scripts
+│   ├── setup.py             # Interactive setup
+│   ├── run_bot.py           # Run the bot
+│   └── full_test.py         # Integration tests
+│
+└── tests/                    # Unit tests
+```
+
+## Configuration Options
+
+### Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `POLY_PRIVATE_KEY` | Yes | Your wallet private key |
+| `POLY_SAFE_ADDRESS` | Yes | Your Polymarket Safe address |
+| `POLY_BUILDER_API_KEY` | For gasless | Builder Program API key |
+| `POLY_BUILDER_API_SECRET` | For gasless | Builder Program secret |
+| `POLY_BUILDER_API_PASSPHRASE` | For gasless | Builder Program passphrase |
+
+### Config File (Alternative)
+
+Create `config.yaml`:
+
+```yaml
+safe_address: "0xYourSafeAddress"
+
+# For gasless trading (optional)
+builder:
+  api_key: "your_api_key"
+  api_secret: "your_api_secret"
+  api_passphrase: "your_passphrase"
+```
+
+Then load it:
+
+```python
+bot = TradingBot(config_path="config.yaml", private_key="0x...")
+```
+
+## Gasless Trading
+
+To eliminate gas fees:
+
+1. Apply for [Builder Program](https://polymarket.com/settings?tab=builder)
+2. Set the environment variables:
+
+```bash
+export POLY_BUILDER_API_KEY=your_key
+export POLY_BUILDER_API_SECRET=your_secret
+export POLY_BUILDER_API_PASSPHRASE=your_passphrase
+```
+
+The bot will automatically use gasless mode when credentials are present.
+
+## API Reference
+
+### TradingBot Methods
+
+| Method | Description |
+|--------|-------------|
+| `place_order(token_id, price, size, side)` | Place a limit order |
+| `cancel_order(order_id)` | Cancel a specific order |
+| `cancel_all_orders()` | Cancel all open orders |
+| `cancel_market_orders(market, asset_id)` | Cancel orders for a specific market |
+| `get_open_orders()` | List your open orders |
+| `get_trades(limit=100)` | Get your trade history |
+| `get_order_book(token_id)` | Get market order book |
+| `get_market_price(token_id)` | Get current market price |
+| `is_initialized()` | Check if bot is ready |
+
+### MarketWebSocket Methods
+
+| Method | Description |
+|--------|-------------|
+| `subscribe(asset_ids, replace=False)` | Subscribe to market data |
+| `run(auto_reconnect=True)` | Start WebSocket connection |
+| `disconnect()` | Close connection |
+| `get_orderbook(asset_id)` | Get cached orderbook |
+| `get_mid_price(asset_id)` | Get mid price |
+
+### GammaClient Methods
+
+| Method | Description |
+|--------|-------------|
+| `get_current_15m_market(coin)` | Get current 15-min market |
+| `get_market_info(coin)` | Get market with token IDs |
+| `get_all_15m_markets()` | List all 15-min markets |
+
+## Security
+
+Your private key is protected by:
+
+1. **PBKDF2** key derivation (480,000 iterations)
+2. **Fernet** symmetric encryption
+3. File permissions set to `0600` (owner-only)
+
+Best practices:
+- Never commit `.env` files to git
+- Use a dedicated wallet for trading
+- Keep your encrypted key file private
+
+## Testing
+
+```bash
+# Run all tests
+pytest tests/ -v
+
+# Run with coverage
+pytest tests/ -v --cov=src
+```
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| `POLY_PRIVATE_KEY not set` | Run `export POLY_PRIVATE_KEY=your_key` |
+| `POLY_SAFE_ADDRESS not set` | Get it from polymarket.com/settings |
+| `Invalid private key` | Check key is 64 hex characters |
+| `Order failed` | Check you have sufficient balance |
+| `WebSocket not connecting` | Check network/firewall settings |
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Write tests for new code
+4. Run `pytest tests/ -v`
+5. Submit a pull request
+
+## License
+
+MIT License - see LICENSE file for details.
