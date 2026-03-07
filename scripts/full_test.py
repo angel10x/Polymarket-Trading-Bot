@@ -12,7 +12,7 @@ The script automatically loads .env file using python-dotenv.
 
 Requirements:
     - Create .env file with POLY_PRIVATE_KEY and POLY_SAFE_ADDRESS
-    - Optionally set POLY_BUILDER_* for gasless testing
+    - Optionally set POLY_BUILDER_* for gasless test
 """
 
 import os
