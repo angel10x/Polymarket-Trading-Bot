@@ -24,7 +24,7 @@ class CTHelpers:
 
         while True:
             a += 1
-            yy = pow(a, 3, cls.P) + 3 % cls.P
+            yy = (pow(a, 3, cls.P) + 3) % cls.P
             # check if yy is a square mod P
             # https://en.wikipedia.org/wiki/Euler%27s_criterion
             if pow(yy, cls.P - 1 >> 1, cls.P) == 1:
