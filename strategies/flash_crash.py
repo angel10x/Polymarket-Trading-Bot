@@ -8,7 +8,7 @@ Strategy Logic:
 1. Auto-discover current 15-minute market for selected coin
 2. Monitor orderbook prices in real-time via WebSocket
 3. When either "Up" or "Down" probability drops by threshold:
-   - Market buy the crashed side
+   - Market buy crashed side
 4. Exit conditions:
    - Take profit: configurable (default +10 cents)
    - Stop loss: configurable (default -5 cents)

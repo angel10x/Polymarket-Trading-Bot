@@ -1,5 +1,5 @@
 """
-Strategies - Trading Strategy Implementations
+Strategies - Trading Strategy Implementation
 
 This package contains trading strategy implementations:
 

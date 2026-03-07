@@ -5,7 +5,7 @@ Provides:
 - Base class for all trading strategies
 - Common lifecycle methods (start, stop, run)
 - Integration with lib components (MarketManager, PriceTracker, PositionManager)
-- Logging and status display utilities
+- Logging display utilities
 
 Usage:
     from strategies.base import BaseStrategy, StrategyConfig
