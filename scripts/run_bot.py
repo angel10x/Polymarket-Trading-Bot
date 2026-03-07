@@ -11,7 +11,7 @@ Supports two modes:
 
 2. Encrypted Key Mode (more secure):
    - Run setup first: python scripts/setup.py
-   - Creates encrypted key file and config.yaml
+   - Creates encrypted key file  config.yaml
    - Run: python scripts/run_bot.py
 
 Usage:
