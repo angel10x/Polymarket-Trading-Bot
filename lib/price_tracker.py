@@ -4,7 +4,7 @@ Price Tracker - Price History and Flash Crash Detection
 Provides:
 - Price history storage with timestamps
 - Flash crash detection (absolute probability drops)
-- Price point data structures
+- Price point data structure
 - Configurable lookback windows
 
 Usage:

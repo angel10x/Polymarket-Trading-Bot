@@ -7,11 +7,6 @@ Provides:
 - In-place terminal updates
 - Log formatting
 
-Usage:
-    from lib.console import Colors, log, clear_screen
-
-    log("Order placed!", level="success")
-    print(f"{Colors.GREEN}Connected{Colors.RESET}")
 """
 
 from datetime import datetime

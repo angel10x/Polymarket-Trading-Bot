@@ -8,9 +8,6 @@ This package provides reusable components for trading strategies and application
 - price_tracker: Price history and pattern detection
 - position_manager: Position tracking with TP/SL
 
-Usage:
-    from lib import MarketManager, PriceTracker, PositionManager
-    from lib.console import Colors, print_colored
 """
 
 from lib.console import Colors

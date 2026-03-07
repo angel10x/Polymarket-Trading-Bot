@@ -7,23 +7,6 @@ Provides:
 - PnL tracking (unrealized and realized)
 - Position state management
 
-Usage:
-    from lib import PositionManager, Position
-
-    manager = PositionManager(take_profit=0.10, stop_loss=0.05)
-
-    # Open position
-    pos = manager.open_position(
-        side="up",
-        token_id="12345",
-        entry_price=0.35,
-        size=10.0
-    )
-
-    # Check exit conditions
-    exit_type, pnl = manager.check_exit(pos.id, current_price=0.45)
-    if exit_type == "take_profit":
-        manager.close_position(pos.id, realized_pnl=pnl)
 """
 
 import time

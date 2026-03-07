@@ -7,27 +7,6 @@ Provides unified interface for:
 - Automatic market switching when markets expire
 - Real-time orderbook caching
 
-Usage:
-    from lib import MarketManager
-
-    manager = MarketManager(coin="BTC")
-
-    @manager.on_book_update
-    async def handle_book(snapshot):
-        print(f"Mid price: {snapshot.mid_price}")
-
-    @manager.on_market_change
-    def handle_change(old_slug, new_slug):
-        print(f"Market changed!")
-
-    await manager.start()
-    await manager.wait_for_data()
-
-    # Access data
-    ob = manager.get_orderbook("up")
-    print(f"Best bid: {ob.best_bid}")
-
-    await manager.stop()
 """
 
 import asyncio
