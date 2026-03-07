@@ -9,8 +9,6 @@ Prerequisites:
     1. Install dependencies: pip install -r requirements.txt
     2. Create .env file with your credentials (see .env.example)
 
-Usage:
-    python examples/quickstart.py
 """
 
 import os

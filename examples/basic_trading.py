@@ -4,8 +4,6 @@ Basic Trading Examples
 
 Demonstrates common trading operations with the trading bot.
 
-Usage:
-    python examples/basic_trading.py
 """
 
 import os

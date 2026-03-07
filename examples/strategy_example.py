@@ -9,7 +9,7 @@ BaseStrategy provides:
 - Order management
 - Position tracking
 - PnL calculation
-- Risk management hooks
+- Risk management
 - Event callbacks
 
 Example strategies included:

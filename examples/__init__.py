@@ -9,10 +9,6 @@ Examples:
     basic_trading.py    - Common trading operations
     strategy_example.py - Custom strategy framework
 
-Quick Start:
-    from examples.quickstart import main
-    import asyncio
-    asyncio.run(main())
 """
 
 from .quickstart import main as run_quickstart
