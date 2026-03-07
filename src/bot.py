@@ -5,7 +5,7 @@ A production-ready trading bot for Polymarket with:
 - Gasless transactions via Builder Program
 - Encrypted private key storage
 - Modular strategy support
-- Comprehensive order management
+- Comprehensive management
 
 Example:
     from src.bot import TradingBot

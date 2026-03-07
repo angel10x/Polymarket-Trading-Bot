@@ -2,7 +2,7 @@
 Gamma API Client - Market Discovery for Polymarket
 
 Provides access to the Gamma API for discovering active markets,
-including 15-minute Up/Down markets for crypto assets.
+including 15-minute Up/Down markets for crypto.
 
 Example:
     from src.gamma_client import GammaClient

@@ -2,7 +2,7 @@
 Utility Module - Helper Functions
 
 This module provides simple helper functions for common operations.
-These are convenience wrappers that make the code easier to use.
+These are convenience wrappers that make the code easy to use.
 
 Example:
     from src.utils import create_bot_from_env, validate_address

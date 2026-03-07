@@ -13,8 +13,8 @@ Environment Variables:
     POLY_PRIVATE_KEY: Private key (hex string, with or without 0x prefix)
     POLY_SAFE_ADDRESS: Polymarket Safe/Proxy wallet address
     POLY_RPC_URL: Polygon RPC URL
-    POLY_BUILDER_API_KEY: Builder Program API key
-    POLY_BUILDER_API_SECRET: Builder Program API secret
+    POLY_BUILDER_API_KEY: Builder Program key
+    POLY_BUILDER_API_SECRET: Builder Program secret
     POLY_BUILDER_API_PASSPHRASE: Builder Program passphrase
     POLY_CLOB_HOST: CLOB API host
     POLY_CHAIN_ID: Chain ID (default: 137)
